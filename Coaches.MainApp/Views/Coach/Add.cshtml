@@ -1,0 +1,31 @@
+﻿@{
+    ViewData["Title"] = "Add Coach";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Add Coach</h1>
+    <form method="post" asp-controller="Coach" asp-action="Add">
+        <table>
+            <tr>
+                <td>First Name:</td>
+                <td><input type="text" id="txtFirstName" name="FirstName"/> </td>
+            </tr>
+            <tr>
+                <td>Surname</td>
+                <td><input type="text" id="txtSurname" name="Surname" /> </td>
+            </tr>
+            <tr>
+                <td>Email</td>
+                <td><input type="text" id="txtEmail" name="Email" /> </td>
+            </tr>
+            <tr>
+                <td>PhoneNumber</td>
+                <td><input type="text" id="txtPhoneNumber" name="PhoneNumber" /> </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><button type="submit" class="btn btn-dark">Submit</button> </td>
+            </tr>
+        </table>
+    </form>
+</div>
