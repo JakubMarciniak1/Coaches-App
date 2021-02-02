@@ -23,7 +23,7 @@ namespace Coaches.MainApp.Services.Implementations
             return ServiceResponse<List<Coach>>.Success(coachesList);
         }
 
-       public ServiceResponse<Coach> GetCoach(int id)
+        public ServiceResponse<Coach> GetCoach(int id)
         {
             var coach = _coachesContext.Coach.Find(id);
             //if (coach == null)
@@ -31,6 +31,32 @@ namespace Coaches.MainApp.Services.Implementations
             //    return ServiceResponse.Error(new ErrorDetails(404, $"Could not find coach(ID {id})"));
             //}
             return ServiceResponse<Coach>.Success(coach);
+        }
+
+        public ServiceResponse<Coach> AddCoach(Coach coach)
+        {
+            var coachEntry = _coachesContext.Coach.Add(coach);
+            _coachesContext.SaveChanges();
+            return ServiceResponse<Coach>.Success(coachEntry.Entity);
+        }
+
+        public ServiceResponse<Coach> UpdateCoach(Coach coach)
+        {
+            var coachEntry = _coachesContext.Coach.Update(coach);
+            _coachesContext.SaveChanges();
+            return ServiceResponse<Coach>.Success(coachEntry.Entity);
+        }
+
+        public ServiceResponse DeleteCoach(int id)
+        {
+            var coach = _coachesContext.Coach.Find(id);
+            //if (coach == null)
+            //{
+            //    return ServiceResponse.Error(new ErrorDetails(404, $"Could not find coach(ID {id})"));
+            //}
+            _coachesContext.Coach.Remove(coach);
+            _coachesContext.SaveChanges();
+            return ServiceResponse.Success();
         }
     }
 }

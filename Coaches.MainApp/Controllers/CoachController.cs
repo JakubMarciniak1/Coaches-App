@@ -1,25 +1,16 @@
-﻿using Coaches.MainApp.Models;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
-using Coaches.MainApp.Data;
+﻿using Coaches.MainApp.Data;
+using Coaches.MainApp.Models;
 using Coaches.MainApp.Services;
-using Coaches.MainApp.Services.Implementations;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Coaches.MainApp.Controllers
 {
     public class CoachController : Controller
     {
-        private readonly CoachesContext _context;
         private readonly ICoachService _coachService;
 
-        public CoachController(CoachesContext context, ICoachService coachService)
+        public CoachController(ICoachService coachService)
         {
-            _context = context;
             _coachService = coachService;
         }
 
@@ -39,8 +30,7 @@ namespace Coaches.MainApp.Controllers
         [HttpPost]
         public IActionResult Add(Coach coach)
         {
-            _context.Coach.Add(coach);
-            _context.SaveChanges();
+            _coachService.AddCoach(coach);
             return RedirectToAction(nameof(Index));
 
         }
@@ -56,26 +46,15 @@ namespace Coaches.MainApp.Controllers
         [HttpPost]
         public IActionResult Update(Coach coach)
         {
-            _context.Coach.Update(coach);
-            _context.SaveChanges();
+            _coachService.UpdateCoach(coach);
             return RedirectToAction(nameof(Index));
         }
 
         public IActionResult Delete(int id)
         {
-            Coach coach = _context.Coach.Find(id);
-            if (coach != null)
-            {
-                _context.Coach.Remove(coach);
-                _context.SaveChanges();
-            }
-
+            _coachService.DeleteCoach(id);
             return RedirectToAction(nameof(Index));
         }
 
-        private List<Coach> SearchCoaches()
-        {
-            return _context.Coach.ToList();
-        }
     }
 }

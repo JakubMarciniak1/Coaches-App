@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace Coaches.MainApp.Models
+namespace Coaches.CommonModels
 {
     public class TrackingLogEvent
     {
