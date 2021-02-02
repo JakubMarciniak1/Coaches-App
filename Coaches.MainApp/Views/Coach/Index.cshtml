@@ -2,34 +2,41 @@
     ViewData["Title"] = "Coach List";
 }
 
-<div class="text-center">
+<div>
     <h1 class="display-4">Coach List</h1>
-
-    <table style="width: 100%">
-        <tr>
-            <th>First Name</th>
-            <th>Surname</th>
-            <th>Email</th>
-            <th>Phone Number</th>
-            <th>Actions</th>
-        </tr>
-
-        @foreach (Coach coach in ViewData.Model)
-        {
+    <div class="w-75">
+        <table class="table-striped">
             <tr>
-                <td>@coach.FirstName</td>
-                <td>@coach.Surname</td>
-                <td>@coach.Email</td>
-                <td>@coach.PhoneNumber</td>
-                <td>
-                    <a class="btn btn-danger" asp-controller="Coach" asp-action="Delete" asp-route-id="@coach.Id">Delete</a>
-                    <a class="btn btn-primary" asp-controller="Coach" asp-action="Edit">Edit</a>
-                </td>
+                <th>First Name</th>
+                <th>Surname</th>
+                <th>Email</th>
+                <th>Phone Number</th>
+                <th>Actions</th>
             </tr>
-        }
-    </table>
 
-    <a class="btn btn-success" asp-controller="Coach" asp-action="Add">Add</a>
+            @foreach (Coach coach in ViewData.Model)
+            {
+                
+                <tr>
+                    <td>@coach.FirstName</td>
+                    <td>@coach.Surname</td>
+                    <td>@coach.Email</td>
+                    <td>@coach.PhoneNumber</td>
+                    <td>
+                        <a class="btn btn-primary" asp-controller="Coach" asp-action="Update" asp-route-id="@coach.Id">Edit</a>
+                        <a class="btn btn-danger" asp-controller="Coach" asp-action="Delete" asp-route-id="@coach.Id">Delete</a>
+                    </td>
+                </tr>
+            }
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> <a class="btn btn-success float-right" asp-controller="Coach" asp-action="Add">Add</a> </td>
+        </tr>
+        </table>
 
-
+        
+    </div>
 </div>

@@ -1,31 +1,29 @@
-﻿@{
+﻿@model Coach
+@{
     ViewData["Title"] = "Add Coach";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Add Coach</h1>
-    <form method="post" asp-controller="Coach" asp-action="Add">
-        <table>
-            <tr>
-                <td>First Name:</td>
-                <td><input type="text" id="txtFirstName" name="FirstName"/> </td>
-            </tr>
-            <tr>
-                <td>Surname</td>
-                <td><input type="text" id="txtSurname" name="Surname" /> </td>
-            </tr>
-            <tr>
-                <td>Email</td>
-                <td><input type="text" id="txtEmail" name="Email" /> </td>
-            </tr>
-            <tr>
-                <td>PhoneNumber</td>
-                <td><input type="text" id="txtPhoneNumber" name="PhoneNumber" /> </td>
-            </tr>
-            <tr>
-                <td></td>
-                <td><button type="submit" class="btn btn-dark">Submit</button> </td>
-            </tr>
-        </table>
+
+    <form asp-action="Add" method="post">
+        <div class="container w-50">
+            <div class="form-group row">
+                <label for="inputFirstName">First Name</label>
+                <input type="text" class="form-control" id="inputFirstName" asp-for="FirstName" placeholder="Enter your first name" required>
+            </div>
+            <div class="form-group row">
+                <label for="inputSurname">Surname</label>
+                <input type="text" class="form-control" id="inputSurname" asp-for="Surname" placeholder="Enter your surname" required>
+            </div>
+            <div class="form-group row">
+                <label for="inputEmailAddress">Email address</label>
+                <input type="email" class="form-control" id="inputEmailAddress" aria-describedby="emailHelp" asp-for="Email" placeholder="Enter email">
+                <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+            </div>
+            <div class="form-group row">
+                <label for="inputPhoneNumber">Phone Number:</label>
+                <input type="tel" class="form-control" id="inputPhoneNumber" asp-for="PhoneNumber" pattern="[0-9]{3}-[0-9]{3}-[0-9]{3}">
+                <small class="form-text text-muted">Format: 123-456-789 </small>
+            </div>
+            <button type="submit" class="btn btn-primary float-right">Submit</button>
+        </div>
     </form>
-</div>

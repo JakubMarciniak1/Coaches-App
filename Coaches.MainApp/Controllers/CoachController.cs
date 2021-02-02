@@ -7,34 +7,57 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Coaches.MainApp.Data;
+using Coaches.MainApp.Services;
+using Coaches.MainApp.Services.Implementations;
 
 namespace Coaches.MainApp.Controllers
 {
     public class CoachController : Controller
     {
         private readonly CoachesContext _context;
+        private readonly ICoachService _coachService;
 
-        private readonly ILogger<CoachController> _logger;
-
-        public CoachController(ILogger<CoachController> logger, CoachesContext context)
+        public CoachController(CoachesContext context, ICoachService coachService)
         {
-            _logger = logger;
             _context = context;
+            _coachService = coachService;
         }
 
         public IActionResult Index()
         {
-            ViewData.Model = SearchCoaches();
+            var response = _coachService.GetCoachList();
+            ViewData.Model = response.ResponseDTO;
             return View();
         }
 
+        [HttpGet]
         public IActionResult Add()
         {
             return View();
         }
 
-        public IActionResult Edit()
+        [HttpPost]
+        public IActionResult Add(Coach coach)
         {
+            _context.Coach.Add(coach);
+            _context.SaveChanges();
+            return RedirectToAction(nameof(Index));
+
+        }
+
+        [HttpGet]
+        public IActionResult Update(int id)
+        {
+            var response = _coachService.GetCoach(id);
+            ViewData.Model = response.ResponseDTO;
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Update(Coach coach)
+        {
+            _context.Coach.Update(coach);
+            _context.SaveChanges();
             return RedirectToAction(nameof(Index));
         }
 
@@ -48,13 +71,6 @@ namespace Coaches.MainApp.Controllers
             }
 
             return RedirectToAction(nameof(Index));
-        }
-
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
         private List<Coach> SearchCoaches()

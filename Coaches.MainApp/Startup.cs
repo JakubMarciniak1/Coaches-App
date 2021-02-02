@@ -1,4 +1,6 @@
 using Coaches.MainApp.Data;
+using Coaches.MainApp.Services;
+using Coaches.MainApp.Services.Implementations;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -23,6 +25,8 @@ namespace Coaches.MainApp
             services.AddControllersWithViews();
             services.AddDbContext<CoachesContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("CoachesCS")));
+
+            services.AddScoped<ICoachService, CoachService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

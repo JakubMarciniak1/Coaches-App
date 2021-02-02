@@ -11,23 +11,17 @@ namespace Coaches.MainApp.Controllers
 {
     public class TrackingLogsController : Controller
     {
-        private readonly ILogger<TrackingLogsController> _logger;
-
-        public TrackingLogsController(ILogger<TrackingLogsController> logger)
-        {
-            _logger = logger;
-        }
-
         public IActionResult Index()
         {
+            ViewData.Model = SearchTrackingLogs();
             return View();
         }
-
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        
+        private List<TrackingLogEvent> SearchTrackingLogs()
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            throw new NotImplementedException();
         }
+
+
     }
 }
