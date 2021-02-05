@@ -24,7 +24,7 @@ namespace Coaches.Tracking
         {
             services.AddControllers();
             services.AddDbContext<TrackingContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("TrackingCs")));
+                options.UseSqlServer(Configuration.GetConnectionString("TrackingCS")));
             services.AddScoped<ITrackingService, TrackingService>();
         }
 
