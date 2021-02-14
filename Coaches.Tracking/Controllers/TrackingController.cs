@@ -16,7 +16,7 @@ namespace Coaches.Tracking.Controllers
         }
 
         [HttpPost]
-        public IActionResult Event(TrackingLogEvent trackingLogEvent)
+        public IActionResult Event([FromBody] TrackingLogEvent trackingLogEvent)
         {
             _trackingService.SaveEvent(trackingLogEvent);
             return Ok();

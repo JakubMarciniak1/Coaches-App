@@ -27,6 +27,7 @@ namespace Coaches.MainApp
                 options.UseSqlServer(Configuration.GetConnectionString("CoachesCS")));
 
             services.AddScoped<ICoachService, CoachService>();
+            services.AddScoped<ITrackingLogsService, TrackingLogsService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

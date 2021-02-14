@@ -5,10 +5,11 @@ using System.Threading.Tasks;
 using Coaches.CommonModels;
 using Coaches.Infrastructure;
 using Coaches.Tracking.Data;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Coaches.Tracking.Services.Implementations
 {
-    public class TrackingService :ITrackingService
+    public class TrackingService : ITrackingService
     {
 
         private TrackingContext _trackingContext;
@@ -21,6 +22,7 @@ namespace Coaches.Tracking.Services.Implementations
         public ServiceResponse SaveEvent(TrackingLogEvent trackingLogEvent)
         {
             _trackingContext.TrackingLogEvent.Add(trackingLogEvent);
+            _trackingContext.SaveChanges();
             return ServiceResponse.Success();
         }
 

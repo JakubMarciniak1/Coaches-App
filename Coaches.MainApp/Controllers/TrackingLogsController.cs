@@ -1,27 +1,23 @@
-﻿using Coaches.MainApp.Models;
+﻿using Coaches.MainApp.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Coaches.MainApp.Controllers
 {
     public class TrackingLogsController : Controller
     {
-        public IActionResult Index()
+        private readonly ITrackingLogsService _trackingLogsService;
+
+        public TrackingLogsController(ITrackingLogsService trackingLogsService)
         {
-            ViewData.Model = SearchTrackingLogs();
-            return View();
-        }
-        
-        private List<TrackingLogEvent> SearchTrackingLogs()
-        {
-            throw new NotImplementedException();
+            _trackingLogsService = trackingLogsService;
         }
 
+        public IActionResult Index()
+        {
+            var response = _trackingLogsService.GetLatestLogs();
+            ViewData.Model = response.ResponseDTO;
+            return View();
+        }
 
     }
 }
