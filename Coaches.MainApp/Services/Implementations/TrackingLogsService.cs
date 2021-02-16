@@ -13,18 +13,27 @@ namespace Coaches.MainApp.Services.Implementations
     {
         public ServiceResponse SendEvent(TrackingLogEvent trackingLogEvent)
         {
+            using (var httpClient = new HttpClient())
+            {
+                var jsonString = JsonConvert.SerializeObject(trackingLogEvent); 
+                var stringContent = new StringContent(jsonString);
+                var result = httpClient.PostAsync("http://localhost:56103/Tracking/Logs",stringContent).Result;
+            }
             return ServiceResponse.Success();
         }
 
         public ServiceResponse<List<TrackingLogEvent>> GetLatestLogs()
         {
-            var httpClient = new HttpClient();
-            var result = httpClient.GetAsync("http://localhost:56103/Tracking/Logs").Result;
-            var stringContent = result.Content.ReadAsStringAsync().Result;
+            using (var httpClient = new HttpClient())
+            {
+                var result = httpClient.GetAsync("http://localhost:56103/Tracking/Logs").Result;
+                var stringContent = result.Content.ReadAsStringAsync().Result;
 
-            var trackingLogEvents = JsonConvert.DeserializeObject<List<TrackingLogEvent>>(stringContent);
+                var trackingLogEvents = JsonConvert.DeserializeObject<List<TrackingLogEvent>>(stringContent);
 
-            return ServiceResponse<List<TrackingLogEvent>>.Success(trackingLogEvents);
+                return ServiceResponse<List<TrackingLogEvent>>.Success(trackingLogEvents);
+            }
+            
         }
     }
 }

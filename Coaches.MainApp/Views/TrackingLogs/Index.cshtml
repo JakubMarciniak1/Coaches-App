@@ -8,13 +8,12 @@
     <div class="w-75">
         <table class="table-striped">
             <tr>
-                <th>EventDate</th>
-                <th>EventTypeId</th>
-                <th>UserIPAddress</th>
-                <th>CoachId</th>
-                <th>UpdatePageUrl</th>
+                <th>Event Date</th>
+                <th>Event Type</th>
+                <th>User IP Address</th>
+                <th>Coach Id</th>
+                <th>Update Page URL</th>
             </tr>
-
             @foreach (TrackingLogEvent trackingLogEvent in ViewData.Model)
             {
 
@@ -23,7 +22,7 @@
                     <td>@trackingLogEvent.EventTypeId</td>
                     <td>@trackingLogEvent.UserIPAddress</td>
                     <td>@trackingLogEvent.CoachId</td>
-                    <td>@trackingLogEvent.UpdatePageUrl</td>
+                    <td><a href="@trackingLogEvent.UpdatePageUrl">@trackingLogEvent.UpdatePageUrl</a></td>
                 </tr>
             }
 
