@@ -9,14 +9,16 @@ namespace Coaches.MainApp.Controllers
     public class CoachController : Controller
     {
         private readonly ICoachService _coachService;
-
+        
         public CoachController(ICoachService coachService)
         {
             _coachService = coachService;
+            
         }
 
         public IActionResult Index()
         {
+            EnsureCoachServiceInitialized();
             var response = _coachService.GetCoachList();
             ViewData.Model = response.ResponseDTO;
             return View();
@@ -31,6 +33,7 @@ namespace Coaches.MainApp.Controllers
         [HttpPost]
         public IActionResult Add(Coach coach)
         {
+            EnsureCoachServiceInitialized();
             _coachService.AddCoach(coach);
             return RedirectToAction(nameof(Index));
 
@@ -39,6 +42,7 @@ namespace Coaches.MainApp.Controllers
         [HttpGet]
         public IActionResult Update(int id)
         {
+            EnsureCoachServiceInitialized();
             var response = _coachService.GetCoach(id);
             if (!response.IsSuccess)
             {
@@ -52,12 +56,14 @@ namespace Coaches.MainApp.Controllers
         [HttpPost]
         public IActionResult Update(Coach coach)
         {
+            EnsureCoachServiceInitialized();
             _coachService.UpdateCoach(coach);
             return RedirectToAction(nameof(Index));
         }
 
         public IActionResult Delete(int id)
         {
+            EnsureCoachServiceInitialized();
             var response = _coachService.DeleteCoach(id);
             if (!response.IsSuccess)
             {
@@ -67,5 +73,10 @@ namespace Coaches.MainApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        private void EnsureCoachServiceInitialized()
+        {
+            var url = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}";
+            _coachService.EnsureInitialized(url);
+        }
     }
 }

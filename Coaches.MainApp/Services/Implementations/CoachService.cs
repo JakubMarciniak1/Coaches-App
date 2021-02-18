@@ -6,6 +6,7 @@ using Coaches.CommonModels;
 using Coaches.Infrastructure;
 using Coaches.MainApp.Data;
 using Coaches.MainApp.Models;
+using Microsoft.AspNetCore.Http;
 
 namespace Coaches.MainApp.Services.Implementations
 {
@@ -14,12 +15,22 @@ namespace Coaches.MainApp.Services.Implementations
         private readonly CoachesContext _coachesContext;
         private readonly ITrackingLogsService _trackingLogsService;
 
+        private bool _initialized;
+        private string _applicationUrl;
 
         public CoachService(CoachesContext coachesContext, ITrackingLogsService trackingLogsService)
         {
             _coachesContext = coachesContext;
             _trackingLogsService = trackingLogsService;
 
+        }
+
+        public void EnsureInitialized(string applicationUrl)
+        {
+            if (_initialized) return;
+
+            _applicationUrl = applicationUrl;
+            _initialized = true;
         }
 
         public ServiceResponse<List<Coach>> GetCoachList()
@@ -52,7 +63,7 @@ namespace Coaches.MainApp.Services.Implementations
             {
                 EventDate = DateTime.UtcNow,
                 EventTypeId = TrackingLogEventType.CoachAdded,
-                UpdatePageUrl = $"localhost:5001/Coach/Update/{coach.Id}",
+                UpdatePageUrl = $"{_applicationUrl}/Coach/Update/{coach.Id}",
                 CoachId = coach.Id,
             });
             return ServiceResponse<Coach>.Success(coachEntry.Entity);
@@ -66,7 +77,7 @@ namespace Coaches.MainApp.Services.Implementations
             {
                 EventDate = DateTime.UtcNow,
                 EventTypeId = TrackingLogEventType.CoachUpdated,
-                UpdatePageUrl = $"localhost:5001/Coach/Update/{coach.Id}",
+                UpdatePageUrl = $"{_applicationUrl}/Coach/Update/{coach.Id}",
                 CoachId = coach.Id,
             });
             return ServiceResponse<Coach>.Success(coachEntry.Entity);
