@@ -37,6 +37,15 @@ namespace Coaches.Infrastructure
             ResponseDTO = responseDTO;
         }
 
+        private ServiceResponse(ErrorDetails errorDetails)
+            : base(errorDetails)
+        { }
+
+        public static new ServiceResponse<T> Error(ErrorDetails errorDetails)
+        {
+            return new ServiceResponse<T>(errorDetails);
+        }
+
         public static ServiceResponse<T> Success(T responseDto)
         {
             return new ServiceResponse<T>(responseDto);

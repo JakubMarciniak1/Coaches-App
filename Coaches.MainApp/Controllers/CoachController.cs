@@ -1,7 +1,8 @@
-﻿using Coaches.MainApp.Data;
+﻿using Coaches.Infrastructure;
 using Coaches.MainApp.Models;
 using Coaches.MainApp.Services;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace Coaches.MainApp.Controllers
 {
@@ -39,6 +40,11 @@ namespace Coaches.MainApp.Controllers
         public IActionResult Update(int id)
         {
             var response = _coachService.GetCoach(id);
+            if (!response.IsSuccess)
+            {
+                TempData[nameof(ErrorDetails)] = JsonConvert.SerializeObject(response.ErrorDetails);
+                return RedirectToAction(nameof(ErrorController.Message), "Error");
+            }
             ViewData.Model = response.ResponseDTO;
             return View();
         }
@@ -52,7 +58,12 @@ namespace Coaches.MainApp.Controllers
 
         public IActionResult Delete(int id)
         {
-            _coachService.DeleteCoach(id);
+            var response = _coachService.DeleteCoach(id);
+            if (!response.IsSuccess)
+            {
+                TempData[nameof(ErrorDetails)] = JsonConvert.SerializeObject(response.ErrorDetails);
+                return RedirectToAction(nameof(ErrorController.Message), "Error");
+            }
             return RedirectToAction(nameof(Index));
         }
 

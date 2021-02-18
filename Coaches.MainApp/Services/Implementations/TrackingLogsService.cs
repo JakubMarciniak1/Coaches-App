@@ -17,7 +17,7 @@ namespace Coaches.MainApp.Services.Implementations
             {
                 var jsonString = JsonConvert.SerializeObject(trackingLogEvent); 
                 var stringContent = new StringContent(jsonString);
-                var result = httpClient.PostAsync("http://localhost:56103/Tracking/Logs",stringContent).Result;
+                var result = httpClient.PostAsync("http://localhost:56103/Tracking/Event",stringContent).Result;
             }
             return ServiceResponse.Success();
         }
