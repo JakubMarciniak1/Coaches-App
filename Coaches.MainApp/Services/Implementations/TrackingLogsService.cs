@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using Coaches.CommonModels;
 using Coaches.Infrastructure;
@@ -13,11 +15,12 @@ namespace Coaches.MainApp.Services.Implementations
     {
         public ServiceResponse SendEvent(TrackingLogEvent trackingLogEvent)
         {
+            trackingLogEvent.UserIPAddress = "123";
             using (var httpClient = new HttpClient())
             {
                 var jsonString = JsonConvert.SerializeObject(trackingLogEvent); 
-                var stringContent = new StringContent(jsonString);
-                var result = httpClient.PostAsync("http://localhost:56103/Tracking/Logs",stringContent).Result;
+                var stringContent = new StringContent(jsonString, Encoding.UTF8, "application/json");
+                var result = httpClient.PostAsync("http://localhost:56103/Tracking/Event",stringContent).Result;
             }
             return ServiceResponse.Success();
         }
