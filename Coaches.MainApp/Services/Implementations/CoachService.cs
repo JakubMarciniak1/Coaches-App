@@ -37,10 +37,10 @@ namespace Coaches.MainApp.Services.Implementations
         public ServiceResponse<Coach> GetCoach(int id)
         {
             var coach = _coachesContext.Coach.Find(id);
-            //if (coach == null)
-            //{
-            //    return ServiceResponse.Error(new ErrorDetails(404, $"Could not find coach(ID {id})"));
-            //}
+            if (coach == null)
+            {
+                return ServiceResponse<Coach>.Error(new ErrorDetails(404, $"Could not find coach(ID {id})"));
+            }
             return ServiceResponse<Coach>.Success(coach);
         }
 
@@ -75,10 +75,10 @@ namespace Coaches.MainApp.Services.Implementations
         public ServiceResponse DeleteCoach(int id)
         {
             var coach = _coachesContext.Coach.Find(id);
-            //if (coach == null)
-            //{
-            //    return ServiceResponse.Error(new ErrorDetails(404, $"Could not find coach(ID {id})"));
-            //}
+            if (coach == null)
+            {
+                return ServiceResponse.Error(new ErrorDetails(404, $"Could not find coach(ID {id})"));
+            }
             _coachesContext.Coach.Remove(coach);
             _coachesContext.SaveChanges();
             _trackingLogsService.SendEvent(new TrackingLogEvent

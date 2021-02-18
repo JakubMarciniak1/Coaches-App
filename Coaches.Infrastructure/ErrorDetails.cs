@@ -4,8 +4,13 @@ namespace Coaches.Infrastructure
 {
     public class ErrorDetails
     {
-        public int Code { get;}
-        public string Message { get; }
+        public int Code { get; set; }
+        public string Message { get; set; }
+
+        public ErrorDetails()
+        {
+            
+        }
 
         public ErrorDetails(int code, string message)
         {
