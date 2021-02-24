@@ -21,10 +21,23 @@ namespace Coaches.Infrastructure
             return new ServiceResponse(null);
         }
 
+        public static ServiceResponse<T> Success<T>(T responseDto)
+        {
+            return ServiceResponse<T>.Success(responseDto);
+        }
+
         public static ServiceResponse Error(ErrorDetails errorDetails)
         {
             return new ServiceResponse(errorDetails);
         }
+
+        public ServiceResponse<T> AsGenericResponse<T>(T responseDto = default)
+        {
+            if (IsSuccess)
+                return ServiceResponse<T>.Success(responseDto);
+            return ServiceResponse<T>.Error(ErrorDetails);
+        }
+
     }
 
     public class ServiceResponse<T> : ServiceResponse

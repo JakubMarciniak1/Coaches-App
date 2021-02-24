@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Coaches.MainApp.Controllers
 {
-    public class TrackingLogsController : Controller
+    public class TrackingLogsController : BaseController
     {
         private readonly ITrackingLogsService _trackingLogsService;
 
@@ -15,6 +15,9 @@ namespace Coaches.MainApp.Controllers
         public IActionResult Index()
         {
             var response = _trackingLogsService.GetLatestLogs();
+            if (IsErrorResponse(response, out var actionResult))
+                return actionResult;
+
             ViewData.Model = response.ResponseDTO;
             return View();
         }

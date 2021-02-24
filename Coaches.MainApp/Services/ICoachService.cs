@@ -1,12 +1,13 @@
 ﻿using Coaches.Infrastructure;
 using Coaches.MainApp.Models;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Http;
 
 namespace Coaches.MainApp.Services
 {
     public interface ICoachService
     {
-        void EnsureInitialized(string applicationUrl);
+        void EnsureInitialized(HttpRequest request);
 
         ServiceResponse<Coach> GetCoach(int id);
         ServiceResponse<Coach> AddCoach(Coach coach);

@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 
 namespace Coaches.MainApp.Controllers
 {
-    public class CoachController : Controller
+    public class CoachController : BaseController
     {
         private readonly ICoachService _coachService;
         
@@ -20,6 +20,8 @@ namespace Coaches.MainApp.Controllers
         {
             EnsureCoachServiceInitialized();
             var response = _coachService.GetCoachList();
+            if (IsErrorResponse(response, out var actionResult))
+                return actionResult;
             ViewData.Model = response.ResponseDTO;
             return View();
         }
@@ -34,7 +36,9 @@ namespace Coaches.MainApp.Controllers
         public IActionResult Add(Coach coach)
         {
             EnsureCoachServiceInitialized();
-            _coachService.AddCoach(coach);
+            var response = _coachService.AddCoach(coach);
+            if (IsErrorResponse(response, out var actionResult))
+                return actionResult;
             return RedirectToAction(nameof(Index));
 
         }
@@ -44,11 +48,9 @@ namespace Coaches.MainApp.Controllers
         {
             EnsureCoachServiceInitialized();
             var response = _coachService.GetCoach(id);
-            if (!response.IsSuccess)
-            {
-                TempData[nameof(ErrorDetails)] = JsonConvert.SerializeObject(response.ErrorDetails);
-                return RedirectToAction(nameof(ErrorController.Message), "Error");
-            }
+            if (IsErrorResponse(response, out var actionResult))
+                return actionResult;
+
             ViewData.Model = response.ResponseDTO;
             return View();
         }
@@ -57,7 +59,9 @@ namespace Coaches.MainApp.Controllers
         public IActionResult Update(Coach coach)
         {
             EnsureCoachServiceInitialized();
-            _coachService.UpdateCoach(coach);
+            var response = _coachService.UpdateCoach(coach);
+            if (IsErrorResponse(response, out var actionResult))
+                return actionResult;
             return RedirectToAction(nameof(Index));
         }
 
@@ -65,18 +69,15 @@ namespace Coaches.MainApp.Controllers
         {
             EnsureCoachServiceInitialized();
             var response = _coachService.DeleteCoach(id);
-            if (!response.IsSuccess)
-            {
-                TempData[nameof(ErrorDetails)] = JsonConvert.SerializeObject(response.ErrorDetails);
-                return RedirectToAction(nameof(ErrorController.Message), "Error");
-            }
+            if (IsErrorResponse(response, out var actionResult))
+                return actionResult;
+        
             return RedirectToAction(nameof(Index));
         }
 
         private void EnsureCoachServiceInitialized()
         {
-            var url = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}";
-            _coachService.EnsureInitialized(url);
+            _coachService.EnsureInitialized(Request);
         }
     }
 }
