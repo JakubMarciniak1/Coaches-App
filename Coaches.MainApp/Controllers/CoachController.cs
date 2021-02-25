@@ -65,10 +65,24 @@ namespace Coaches.MainApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+
+        [HttpGet]
         public IActionResult Delete(int id)
         {
             EnsureCoachServiceInitialized();
-            var response = _coachService.DeleteCoach(id);
+            var response = _coachService.GetCoach(id);
+            if (IsErrorResponse(response, out var actionResult))
+                return actionResult;
+
+            ViewData.Model = response.ResponseDTO;
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Delete(Coach coach)
+        {
+            EnsureCoachServiceInitialized();
+            var response = _coachService.DeleteCoach(coach.Id);
             if (IsErrorResponse(response, out var actionResult))
                 return actionResult;
         

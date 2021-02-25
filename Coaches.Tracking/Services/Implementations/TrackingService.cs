@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Coaches.Tracking.Services.Implementations
 {
-    public class TrackingService : ITrackingService
+    public class TrackingService : BaseService, ITrackingService
     {
 
         private TrackingContext _trackingContext;
@@ -21,19 +21,25 @@ namespace Coaches.Tracking.Services.Implementations
 
         public ServiceResponse SaveEvent(TrackingLogEvent trackingLogEvent)
         {
-            _trackingContext.TrackingLogEvent.Add(trackingLogEvent);
-            _trackingContext.SaveChanges();
-            return ServiceResponse.Success();
+            return TryExecute(()=>
+            {
+                _trackingContext.TrackingLogEvent.Add(trackingLogEvent);
+                _trackingContext.SaveChanges();
+                return ServiceResponse.Success();
+            });
+           
         }
 
         public ServiceResponse<List<TrackingLogEvent>> GetLogs()
         {
-            var logList = _trackingContext.TrackingLogEvent
-                .OrderByDescending(logEvent => logEvent.EventDate)
-                .Take(20)
-                .ToList();
-
-            return ServiceResponse<List<TrackingLogEvent>>.Success(logList);
+            return TryExecute(() =>
+            {
+                var logList = _trackingContext.TrackingLogEvent
+                    .OrderByDescending(logEvent => logEvent.EventDate)
+                    .Take(20)
+                    .ToList();
+                return ServiceResponse<List<TrackingLogEvent>>.Success(logList);
+            });
         }
 
     }

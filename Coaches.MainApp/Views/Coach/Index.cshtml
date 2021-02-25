@@ -4,39 +4,40 @@
 
 <div>
     <h1 class="display-4">Coach List</h1>
-    <div class="w-75">
-        <table class="table-striped">
+        <table class="table table-striped">
             <tr>
+                <th>ID</th>
                 <th>First Name</th>
                 <th>Surname</th>
                 <th>Email</th>
                 <th>Phone Number</th>
-                <th>Actions</th>
+                <th class="text-right">Actions</th>
             </tr>
 
             @foreach (Coach coach in ViewData.Model)
             {
                 
                 <tr>
+                    <td>@coach.Id</td>
                     <td>@coach.FirstName</td>
                     <td>@coach.Surname</td>
                     <td>@coach.Email</td>
                     <td>@coach.PhoneNumber</td>
-                    <td>
+                    <td class="text-right">
                         <a class="btn btn-primary" asp-controller="Coach" asp-action="Update" asp-route-id="@coach.Id">Edit</a>
                         <a class="btn btn-danger" asp-controller="Coach" asp-action="Delete" asp-route-id="@coach.Id">Delete</a>
                     </td>
                 </tr>
             }
-        <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td> <a class="btn btn-success float-right" asp-controller="Coach" asp-action="Add">Add</a> </td>
-        </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td> <a class="btn btn-success float-right" asp-controller="Coach" asp-action="Add">Add</a> </td>
+            </tr>
         </table>
 
         
-    </div>
 </div>
