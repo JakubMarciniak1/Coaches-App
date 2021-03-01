@@ -7,7 +7,7 @@ namespace Coaches.MainApp.Services
 {
     public interface ICoachService
     {
-        void EnsureInitialized(HttpRequest request);
+        void EnsureInitialized(string applicationUrl, string userIpAddress);
 
         ServiceResponse<Coach> GetCoach(int id);
         ServiceResponse<Coach> AddCoach(Coach coach);

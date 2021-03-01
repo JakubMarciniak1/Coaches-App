@@ -1,6 +1,7 @@
 ﻿using Coaches.Infrastructure;
 using Coaches.MainApp.Models;
 using Coaches.MainApp.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
@@ -91,7 +92,8 @@ namespace Coaches.MainApp.Controllers
 
         private void EnsureCoachServiceInitialized()
         {
-            _coachService.EnsureInitialized(Request);
+            _coachService.EnsureInitialized($"{Request.Scheme}://{Request.Host}{Request.PathBase}",
+                Request.HttpContext.Connection.RemoteIpAddress.ToString());
         }
     }
 }
