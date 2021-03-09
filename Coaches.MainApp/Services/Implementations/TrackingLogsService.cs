@@ -12,10 +12,13 @@ namespace Coaches.MainApp.Services.Implementations
     public class TrackingLogsService : BaseService, ITrackingLogsService
     {
         private readonly IConfiguration _configuration;
+        private readonly IHttpService _service;
 
-        public TrackingLogsService(IConfiguration configuration)
+
+        public TrackingLogsService(IConfiguration configuration, IHttpService service)
         {
             _configuration = configuration;
+            _service = service;
         }
 
 
@@ -23,15 +26,18 @@ namespace Coaches.MainApp.Services.Implementations
         {
             return TryExecute(() =>
             {
-                using (var httpClient = new HttpClient())
-                {
-                    var jsonString = JsonConvert.SerializeObject(trackingLogEvent);
-                    var stringContent = new StringContent(jsonString, Encoding.UTF8, "application/json");
-                    var url = _configuration.GetValue<string>("AppTrackingURLs:Event");
-                    var response = httpClient.PostAsync(url, stringContent).Result;
-                    if (!response.IsSuccessStatusCode)
-                        return ServiceResponse.Error(new ErrorDetails((int)response.StatusCode, response.ReasonPhrase));
-                }
+
+                var jsonString = JsonConvert.SerializeObject(trackingLogEvent);
+                var stringContent = new StringContent(jsonString, Encoding.UTF8, "application/json");
+                var url = _configuration.GetValue<string>("AppTrackingURLs:Event");
+                var response = _service.Post(url, stringContent);
+                if (!response.IsSuccess)
+                    return response;
+
+                var httpResponse = response.ResponseDTO;
+                if (!httpResponse.IsSuccessStatusCode)
+                    return ServiceResponse.Error(new ErrorDetails((int)httpResponse.StatusCode, httpResponse.ReasonPhrase));
+
 
                 return ServiceResponse.Success();
             });
@@ -41,21 +47,19 @@ namespace Coaches.MainApp.Services.Implementations
         {
             return TryExecute(() =>
             {
+                var url = _configuration.GetValue<string>("AppTrackingURLs:Logs");
+                var response = _service.Get(url);
+                if (!response.IsSuccess)
+                    return response.AsGenericResponse<List<TrackingLogEvent>>();
 
+                var httpResponse = response.ResponseDTO;
+                if (!httpResponse.IsSuccessStatusCode)
+                    return ServiceResponse<List<TrackingLogEvent>>.Error(new ErrorDetails(
+                        (int)httpResponse.StatusCode, httpResponse.ReasonPhrase));
 
-                using (var httpClient = new HttpClient())
-                {
-                    var url = _configuration.GetValue<string>("AppTrackingURLs:Logs");
-                    var response = httpClient.GetAsync(url).Result;
-                    if (!response.IsSuccessStatusCode)
-                        return ServiceResponse<List<TrackingLogEvent>>.Error(new ErrorDetails((int) response.StatusCode,
-                            response.ReasonPhrase));
-                    var stringContent = response.Content.ReadAsStringAsync().Result;
-
-                    var trackingLogEvents = JsonConvert.DeserializeObject<List<TrackingLogEvent>>(stringContent);
-
-                    return ServiceResponse<List<TrackingLogEvent>>.Success(trackingLogEvents);
-                }
+                var stringContent = httpResponse.Content.ReadAsStringAsync().Result;
+                var trackingLogEvents = JsonConvert.DeserializeObject<List<TrackingLogEvent>>(stringContent);
+                return ServiceResponse<List<TrackingLogEvent>>.Success(trackingLogEvents);
             });
         }
     }

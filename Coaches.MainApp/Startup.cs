@@ -1,4 +1,5 @@
 using Coaches.MainApp.Data;
+using Coaches.MainApp.Repositories;
 using Coaches.MainApp.Services;
 using Coaches.MainApp.Services.Implementations;
 using Microsoft.AspNetCore.Builder;
@@ -29,6 +30,8 @@ namespace Coaches.MainApp
 
             services.AddScoped<ICoachService, CoachService>();
             services.AddScoped<ITrackingLogsService, TrackingLogsService>();
+            services.AddScoped<ICoachRepository, CoachRepository>();
+            services.AddScoped<IHttpService, HttpService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
