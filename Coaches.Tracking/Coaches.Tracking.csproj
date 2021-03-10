@@ -12,6 +12,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Coaches.CommonModels\Coaches.CommonModels.csproj" />
     <ProjectReference Include="..\Coaches.Infrastructure\Coaches.Infrastructure.csproj" />
+    <ProjectReference Include="..\Coaches.MainApp\Coaches.MainApp.csproj" />
   </ItemGroup>
 
 

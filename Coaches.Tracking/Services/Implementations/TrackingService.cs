@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Coaches.CommonModels;
 using Coaches.Infrastructure;
 using Coaches.Tracking.Data;
+using Coaches.Tracking.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Coaches.Tracking.Services.Implementations
@@ -12,19 +13,18 @@ namespace Coaches.Tracking.Services.Implementations
     public class TrackingService : BaseService, ITrackingService
     {
 
-        private TrackingContext _trackingContext;
+        private ITrackingLogEventRepository _repository;
 
-        public TrackingService(TrackingContext trackingContext)
+        public TrackingService(ITrackingLogEventRepository repository)
         {
-            _trackingContext = trackingContext;
+            _repository = repository;
         }
 
         public ServiceResponse SaveEvent(TrackingLogEvent trackingLogEvent)
         {
             return TryExecute(()=>
             {
-                _trackingContext.TrackingLogEvent.Add(trackingLogEvent);
-                _trackingContext.SaveChanges();
+                _repository.InsertEvent(trackingLogEvent);
                 return ServiceResponse.Success();
             });
            
@@ -34,7 +34,7 @@ namespace Coaches.Tracking.Services.Implementations
         {
             return TryExecute(() =>
             {
-                var logList = _trackingContext.TrackingLogEvent
+                var logList = _repository.GetEvents()
                     .OrderByDescending(logEvent => logEvent.EventDate)
                     .Take(20)
                     .ToList();

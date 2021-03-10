@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Coaches.CommonModels", "Coa
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Coaches.Tracking", "Coaches.Tracking\Coaches.Tracking.csproj", "{034E4B2D-DA03-4762-9D94-E98D3AED11B6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Coaches.Test", "Coaches.Test\Coaches.Test.csproj", "{2E028FBA-69D6-4338-92A8-E85675508AEE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Coaches.Test", "Coaches.Test\Coaches.Test.csproj", "{2E028FBA-69D6-4338-92A8-E85675508AEE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
