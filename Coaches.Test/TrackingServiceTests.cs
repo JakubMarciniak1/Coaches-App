@@ -89,7 +89,10 @@ namespace Coaches.Test
         [InlineData(0)]
         [InlineData(5)]
         [InlineData(20)]
-        // max logs == 20 
+        [InlineData(21)]
+        [InlineData(100)]
+
+        // max logs stored == 20 
         public void GetLogs_IsCorrectEventsCount(int logCount)
         {
             var trackingLogEventRepositoryMock = new Mock<ITrackingLogEventRepository>();
@@ -99,11 +102,13 @@ namespace Coaches.Test
             {
                 trackingLogEventList.Add(new TrackingLogEvent());
             }
+            var expectedLogCount = logCount > 20 ? 20 : logCount;
 
             var sut = new TrackingService(trackingLogEventRepositoryMock.Object);
-                
+
             sut.GetLogs().Should().BeOfType<ServiceResponse<List<TrackingLogEvent>>>()
-                .And.Match<ServiceResponse<List<TrackingLogEvent>>>(response => response.ResponseDTO.Count == logCount);
+                    .And.Match<ServiceResponse<List<TrackingLogEvent>>>(response => response.ResponseDTO.Count == expectedLogCount);
+
         }
     }
 }
