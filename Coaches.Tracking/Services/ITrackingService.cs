@@ -6,7 +6,7 @@ namespace Coaches.Tracking.Services
 {
     public interface ITrackingService
     {
-         ServiceResponse SaveEvent(TrackingLogEvent trackingLogEvent);
+        ServiceResponse<TrackingLogEvent> SaveEvent(TrackingLogEvent trackingLogEvent);
         ServiceResponse<List<TrackingLogEvent>> GetLogs();
     }
 }

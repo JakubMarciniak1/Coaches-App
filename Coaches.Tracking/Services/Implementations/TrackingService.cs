@@ -20,12 +20,12 @@ namespace Coaches.Tracking.Services.Implementations
             _repository = repository;
         }
 
-        public ServiceResponse SaveEvent(TrackingLogEvent trackingLogEvent)
+        public ServiceResponse<TrackingLogEvent> SaveEvent(TrackingLogEvent trackingLogEvent)
         {
             return TryExecute(()=>
             {
-                _repository.InsertEvent(trackingLogEvent);
-                return ServiceResponse.Success();
+                var insertedTrackingLogEvent = _repository.InsertEvent(trackingLogEvent);
+                return ServiceResponse<TrackingLogEvent>.Success(insertedTrackingLogEvent);
             });
            
         }

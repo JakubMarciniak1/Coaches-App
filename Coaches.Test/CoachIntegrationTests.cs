@@ -106,5 +106,92 @@ namespace Coaches.Test
         }
 
 
+        [Theory]
+        [InlineData("x", "y", "z", "5")]
+        [InlineData("a", "b", "c", "%")]
+        [InlineData("k", "l", null, null)]
+        public void AddCoach_DeleteCoach_IsSuccess(string firstName, string surname, string email, string phoneNumber)
+        {
+            var trackingLogsService = new Mock<ITrackingLogsService>();
+            trackingLogsService.Setup(service => service.SendEvent(
+                It.IsAny<TrackingLogEvent>())).Returns(ServiceResponse.Success());
+
+            var sut = new CoachService(new FakeCoachRepository(), trackingLogsService.Object);
+            sut.EnsureInitialized("DummyURL", "0001");
+
+            var coach = new Coach()
+            {
+                FirstName = firstName,
+                Surname = surname,
+                Email = email,
+                PhoneNumber = phoneNumber
+            };
+
+            var addedCoach = sut.AddCoach(coach).ResponseDTO;
+            var deleteResponse = sut.DeleteCoach(addedCoach.Id);
+
+            deleteResponse.Should().Match<ServiceResponse>(response => response.IsSuccess);
+
+        }
+
+        [Theory]
+        [InlineData("x", "y", "z", "5")]
+        [InlineData("a", "b", "c", "%")]
+        [InlineData("k", "l", null, null)]
+        public void AddCoach_DeleteCoach_GetCoach_IsNotFound(string firstName, string surname, string email, string phoneNumber)
+        {
+            var trackingLogsService = new Mock<ITrackingLogsService>();
+            trackingLogsService.Setup(service => service.SendEvent(
+                It.IsAny<TrackingLogEvent>())).Returns(ServiceResponse.Success());
+
+            var sut = new CoachService(new FakeCoachRepository(), trackingLogsService.Object);
+            sut.EnsureInitialized("DummyURL", "0001");
+
+            var coach = new Coach()
+            {
+                FirstName = firstName,
+                Surname = surname,
+                Email = email,
+                PhoneNumber = phoneNumber
+            };
+
+            var addedCoach = sut.AddCoach(coach).ResponseDTO;
+            sut.DeleteCoach(addedCoach.Id);
+            var getCoach = sut.GetCoach(addedCoach.Id);
+
+            getCoach.Should().Match<ServiceResponse>(response => !response.IsSuccess && response.ErrorDetails.Code == 404);
+
+        }
+
+        [Theory]
+        [InlineData("x", "y", "z", "5")]
+        [InlineData("a", "b", "c", "%")]
+        [InlineData("k", "l", null, null)]
+        public void AddCoach_DeleteCoach_GetCoachList_IsNotFiguringOnList(string firstName, string surname, string email, string phoneNumber)
+        {
+            var trackingLogsService = new Mock<ITrackingLogsService>();
+            trackingLogsService.Setup(service => service.SendEvent(
+                It.IsAny<TrackingLogEvent>())).Returns(ServiceResponse.Success());
+
+            var sut = new CoachService(new FakeCoachRepository(), trackingLogsService.Object);
+            sut.EnsureInitialized("DummyURL", "0001");
+
+            var coach = new Coach()
+            {
+                FirstName = firstName,
+                Surname = surname,
+                Email = email,
+                PhoneNumber = phoneNumber
+            };
+
+            var addedCoach = sut.AddCoach(coach).ResponseDTO;
+            sut.DeleteCoach(addedCoach.Id);
+            var getCoachList = sut.GetCoachList().ResponseDTO;
+
+            //getCoachList.Should().Match<List<Coach>>(response => response.Count==0);
+            getCoachList.Should().NotContain(addedCoach);
+
+        }
+
     }
 }

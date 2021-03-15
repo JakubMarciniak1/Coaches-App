@@ -202,5 +202,87 @@ namespace Coaches.Test
                 );
         }
 
+
+        [Fact]
+        public void UpdateCoach_IsSuccess()
+        {
+            var coachRepositoryMock = new Mock<ICoachRepository>();
+            var coach = new Coach();
+            coachRepositoryMock.Setup(repository => repository.UpdateCoach(coach)).Returns(coach);
+            var trackingLogsService = new Mock<ITrackingLogsService>();
+            trackingLogsService.Setup(service => service.SendEvent(
+                It.IsAny<TrackingLogEvent>())).Returns(ServiceResponse.Success());
+
+            var sut = new CoachService(coachRepositoryMock.Object, trackingLogsService.Object);
+            sut.EnsureInitialized("DummyURL", "0001");
+
+            sut.UpdateCoach(coach).Should().Match<ServiceResponse<Coach>>(response => response.IsSuccess);
+        }
+
+        [Theory]
+        [InlineData("x", "y", "z", "5")]
+        [InlineData("a", "b", "c", "%")]
+        [InlineData("k", "l", null, null)]
+        public void UpdateCoach_IsDataMatching(string firstName, string surname, string email, string phoneNumber)
+        {
+            var coachRepositoryMock = new Mock<ICoachRepository>();
+            var coach = new Coach()
+            {
+                FirstName = firstName,
+                Surname = surname,
+                Email = email,
+                PhoneNumber = phoneNumber
+            };
+            coachRepositoryMock.Setup(repository => repository.UpdateCoach(coach))
+                .Returns(coach);
+
+
+            var trackingLogsService = new Mock<ITrackingLogsService>();
+            trackingLogsService.Setup(service => service.SendEvent(
+                It.IsAny<TrackingLogEvent>())).Returns(ServiceResponse.Success());
+
+            var sut = new CoachService(coachRepositoryMock.Object, trackingLogsService.Object);
+            sut.EnsureInitialized("DummyURL", "0001");
+
+            sut.UpdateCoach(coach).Should().Match<ServiceResponse<Coach>>(response =>
+                response.ResponseDTO.FirstName == firstName && response.ResponseDTO.Surname == surname &&
+                response.ResponseDTO.Email == email && response.ResponseDTO.PhoneNumber == phoneNumber
+            );
+        }
+
+        [Fact]
+        public void DeleteCoach_IsSuccess()
+        {
+            var coachRepositoryMock = new Mock<ICoachRepository>();
+            var coach = new Coach();
+            coachRepositoryMock.Setup(repository => repository.GetCoachById(coach.Id)).Returns(coach);
+            coachRepositoryMock.Setup(repository => repository.DeleteCoach(coach));
+            var trackingLogsService = new Mock<ITrackingLogsService>();
+            trackingLogsService.Setup(service => service.SendEvent(
+                It.IsAny<TrackingLogEvent>())).Returns(ServiceResponse.Success());
+
+            var sut = new CoachService(coachRepositoryMock.Object, trackingLogsService.Object);
+            sut.EnsureInitialized("DummyURL", "0001");
+
+            sut.DeleteCoach(coach.Id).Should().Match<ServiceResponse>(response => response.IsSuccess);
+        }
+
+        [Fact]
+        public void DeleteCoach_IsDeleted()
+        {
+            var coachRepositoryMock = new Mock<ICoachRepository>();
+            var coach = new Coach();
+            coachRepositoryMock.Setup(repository => repository.GetCoachById(coach.Id)).Returns(coach);
+            coachRepositoryMock.Setup(repository => repository.DeleteCoach(coach));
+            var trackingLogsService = new Mock<ITrackingLogsService>();
+            trackingLogsService.Setup(service => service.SendEvent(
+                It.IsAny<TrackingLogEvent>())).Returns(ServiceResponse.Success());
+
+            var sut = new CoachService(coachRepositoryMock.Object, trackingLogsService.Object);
+            sut.EnsureInitialized("DummyURL", "0001");
+
+            sut.DeleteCoach(coach.Id);
+            coachRepositoryMock.Verify(repository => repository.DeleteCoach(coach));
+        }
     }
 }
