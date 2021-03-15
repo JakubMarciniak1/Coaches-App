@@ -1,25 +1,44 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net;
-using System.Net.Http;
-using System.Text;
-using Coaches.CommonModels;
+﻿using Coaches.CommonModels;
 using Coaches.Tracking.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Text;
+using Microsoft.Extensions.Configuration;
 
 namespace Coaches.Test
 {
-    class GlobalIntegrationFixture : IDisposable
+    public class GlobalIntegrationFixture : IDisposable
     {
         private TrackingController _trackingController;
-        public FakeHttpService FakeHttpService { get; private set; }
+        public FakeHttpService FakeHttpService { get; }
+        public IConfiguration Configuration { get; }
 
         public GlobalIntegrationFixture()
         {
+            var currentDirPath = Directory.GetCurrentDirectory();
+            var dirInfo = new DirectoryInfo(currentDirPath);
+            while (dirInfo != null && !dirInfo.GetFiles("*.sln").Any())
+                dirInfo = dirInfo.Parent;
+            if (dirInfo == null)
+                throw new Exception("tests run outside solution");
+
+            Configuration = new ConfigurationBuilder()
+                .SetBasePath(dirInfo.FullName)
+                .AddJsonFile("Coaches.MainApp/appsettings.json")
+                .Build();
+
+            var logsUrl = Configuration["AppTrackingURLs:Logs"];
+            var eventUrl = Configuration["AppTrackingURLs:Event"];
+
+
             FakeHttpService = new FakeHttpService();
-            FakeHttpService.AssignGetEndpoint("http://localhost:56103/Tracking/Logs", FakeGetCoachList);
-            FakeHttpService.AssignPostEndpoint("http://localhost:56103/Tracking/Event", FakeSendEvent);
+            FakeHttpService.AssignGetEndpoint(logsUrl, FakeGetCoachList);
+            FakeHttpService.AssignPostEndpoint(eventUrl, FakeSendEvent);
         }
 
         public void InitTrackingController(TrackingController trackingController)

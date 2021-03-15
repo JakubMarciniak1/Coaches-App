@@ -7,7 +7,7 @@ using Coaches.MainApp.Services;
 
 namespace Coaches.Test
 {
-    class FakeHttpService :BaseService, IHttpService
+    public class FakeHttpService :BaseService, IHttpService
     {
         private Dictionary<string, Func<HttpResponseMessage>> _getEndpoints = new Dictionary<string, Func<HttpResponseMessage>>();
         private Dictionary<string, Func<HttpContent, HttpResponseMessage>> _postEndpoints = new Dictionary<string, Func<HttpContent, HttpResponseMessage>>();

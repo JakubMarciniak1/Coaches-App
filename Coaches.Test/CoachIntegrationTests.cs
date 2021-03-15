@@ -15,7 +15,7 @@ using Xunit;
 
 namespace Coaches.Test
 {
-    public class IntegrationTests
+    public class CoachIntegrationTests
     {
         [Theory]
         [InlineData("x", "y", "z", "5")]
