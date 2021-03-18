@@ -1,4 +1,5 @@
 using Coaches.Tracking.Data;
+using Coaches.Tracking.Repositories;
 using Coaches.Tracking.Services;
 using Coaches.Tracking.Services.Implementations;
 using Microsoft.AspNetCore.Builder;
@@ -26,6 +27,7 @@ namespace Coaches.Tracking
             services.AddDbContext<TrackingContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("TrackingCS")));
             services.AddScoped<ITrackingService, TrackingService>();
+            services.AddScoped<ITrackingLogEventRepository, TrackingLogEventRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
